@@ -37,9 +37,6 @@ def get_image():
     return redirect(url_for('index'))
 
 
-requests
-
-
 def reset_box():
     REDIS.set("boxInfo", "")
 
