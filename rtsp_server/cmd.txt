@@ -1,0 +1,11 @@
+docker run --rm -it --privileged -v /dev/video0:/dev/video0 -v $(pwd)/rtsp_server/rtsp-simple-server.yml:/rtsp-simple-server.yml --net=host rtsp
+
+
+cmake -D WITH_FFMPEG=ON -D BUILD_opencv_python3=yes -D OPENCV_PYTHON3_INSTALL_PATH=/usr/local/lib/python3.9/site-packages -D PYTHON3_EXECUTABLE=/usr/local/bin/python3.9 -D WITH_GSTREAMER=ON ..
+
+apt install -y cmake ffmpeg libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-ugly gstreamer1.0-rts libavcodec-dev libavformat-dev libswscale-dev libv4l-dev libxvidcore-dev libx264-dev
+
+out = cv2.VideoWriter('appsrc ! videoconvert' + \
+    ' ! x264enc speed-preset=ultrafast bitrate=600 key-int-max=40' + \
+    ' ! rtspclientsink location=rtsp://127.0.0.1:8554/mystream',
+    cv2.CAP_GSTREAMER, 0, fps, (width, height), True)

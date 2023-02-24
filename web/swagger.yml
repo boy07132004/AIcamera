@@ -1,0 +1,77 @@
+swagger: "2.0"
+info:
+  title: AI Camera
+  description: API Description
+  version: "1.0"
+host: 127.0.0.1:5000
+basePath: /
+schemes:
+  - http
+
+paths:      
+  /get_info:
+    get:
+      summary: Get system information.
+      tags:
+        - "GET"
+      produces:
+        - application/json
+      responses:
+        200:
+          schema:
+              type: object
+              properties:
+                frameWidth:
+                  type: integer
+                  example: 640
+                frameHeight:
+                  type: integer
+                  example: 480
+
+  /service/{service}:
+    get:
+      tags:
+        - GET
+      parameters:
+        - name: service
+          in: path
+          type: string
+          description: service name
+
+        - name: cmd
+          in: query
+          type: string
+          enum: ['status', 'start', 'stop']
+          description: Activate/deactivate the service or check the service current status
+
+      responses:
+        200:
+          description: success
+
+  /update_box_info:
+    post:
+      tags:
+      - POST
+      parameters:
+        - name: box information
+          in: body
+          schema:
+            type: object
+            properties:
+              boxName:
+                type: object
+                properties:
+                  x:
+                    type: integer
+                  y:
+                    type: integer
+                  w:
+                    type: integer
+                  h:
+                    type: integer
+                  newName:
+                    type: string
+
+      responses:
+        200:
+          description: None

@@ -1,0 +1,186 @@
+<html>
+
+<head>
+  <style>
+    #selectable-area {
+      width: 500px;
+      height: 300px;
+      border: 1px solid black;
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      cursor: crosshair;
+      background-image:url("{{ url_for('get_image')}}");
+    }
+
+    .selection-box {
+      position: absolute;
+      background-color: lightgray;
+      opacity: 0.5;
+      display: none;
+    }
+
+    #naming-area {
+      border: 1px solid black;
+      position: absolute;
+      width: 500px;
+      left: 100px;
+      top: 500px;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div id="selectable-area" onmousedown="handleMouseDown(event)" onmouseup="handleMouseUp(event)"
+    onmousemove="handleMouseMove(event)">
+    <div id="selection-box" class="selection-box"></div>
+  </div>
+
+  <div id="naming-area">
+    <ul id="named-list"></ul>
+    <input type="button" style="background-color: red; font-size: 24px;" onclick="removeAllItems()" value="Reset">
+    <button style="font-size: 24px;" onclick="submitForm()">Save!</button>
+  </div>
+</body>
+<script>
+  var areaElementX = 100;
+  var areaElementY = 100;
+  var startX;
+  var startY;
+  var endX;
+  var endY;
+  var isDragging = false;
+
+  function currIdx() {
+    return document.getElementsByClassName("rec").length || 0;
+  }
+
+  function handleMouseDown(event) {
+    startX = event.clientX;
+    startY = event.clientY;
+    isDragging = true;
+  }
+
+  function handleMouseUp(event) {
+    if (!isDragging) return;
+    endX = event.clientX;
+    endY = event.clientY;
+    isDragging = false;
+    updateSelection();
+  }
+
+  function handleMouseMove(event) {
+    if (isDragging) {
+      updateSelectionPreview(event.clientX, event.clientY);
+    }
+  }
+
+  function updateSelectionPreview(x, y) {
+    var selectionBox = document.getElementById("selection-box");
+    var left = Math.min(startX, x) - areaElementX;
+    var top = Math.min(startY, y) - areaElementY;
+    var width = Math.abs(startX - x);
+    var height = Math.abs(startY - y);
+    selectionBox.style.left = left + "px";
+    selectionBox.style.top = top + "px";
+    selectionBox.style.width = width + "px";
+    selectionBox.style.height = height + "px";
+    selectionBox.style.display = "block";
+  }
+
+  function updateSelection() {
+    var selectionBox = document.getElementById("selection-box");
+    selectionBox.style.display = "none";
+    var w = Math.abs(startX - endX);
+    var h = Math.abs(startY - endY);
+    if (w < 10 || h < 10) return;
+    var x = Math.min(startX, endX);
+    var y = Math.min(startY, endY);
+    addNameInput(currIdx());
+    addRectangle(x, y, w, h, currIdx());
+  }
+
+  function addRectangle(x, y, w, h, name) {
+    var rectangle = document.createElement("div");
+    rectangle.className = "rec";
+    rectangle.innerHTML = name;
+    rectangle.style.position = "absolute";
+    rectangle.style.width = w;
+    rectangle.style.height = h;
+    rectangle.style.border = "1px solid red";
+    rectangle.style.left = x;
+    rectangle.style.top = y;
+    rectangle.style.textAlign = "left";
+    rectangle.style.verticalAlign = "top";
+
+    document.body.appendChild(rectangle);
+  }
+
+  function addNameInput(oldName) {
+    var board = document.getElementById("named-list");
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(oldName + " :  "));
+
+    var input = document.createElement("input")
+    input.name = "inputName" + oldName;
+    input.id = "input" + oldName;
+    input.style.width = "100px";
+    li.appendChild(input);
+    board.appendChild(li);
+  }
+
+  function removeAllItems() {
+    var elements = document.getElementsByClassName("rec");
+    for (idx = 0; idx < elements.length; idx++) {
+      elements[idx].remove();
+    }
+
+  }
+
+  function initHistory() {
+      {% for name, area in historyArea.items() %}
+        var x = {{ area["x"] }} + areaElementX;
+        var y = {{ area["y"] }} + areaElementY;
+        addRectangle(x, y, '{{area["w"]}}', '{{area["h"]}}', '{{name}}');
+        addNameInput('{{name}}');
+      {% endfor %}
+    }
+
+
+  function submitForm() {
+    var elements = document.getElementsByClassName("rec");
+    var ret = {};
+    var boxName;
+    for (idx = 0; idx < elements.length; idx++) {
+      boxName = elements[idx].innerText;
+
+      ret[boxName] = {
+        "newName": document.getElementById("input" + boxName).value,
+        "x": elements[idx].offsetLeft - areaElementX,
+        "y": elements[idx].offsetTop - areaElementY,
+        "w": elements[idx].offsetWidth - 2,
+        "h": elements[idx].offsetHeight - 2
+      }
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "{{ url_for('update_box_info') }}", true);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.send(JSON.stringify(ret));
+
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        console.log("Good");
+        location.reload(true);
+      } else {
+        console.log("Failed");
+      }
+    };
+  }
+
+
+  initHistory();
+</script>
+
+</html>
