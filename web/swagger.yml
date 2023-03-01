@@ -36,13 +36,31 @@ paths:
         - name: service
           in: path
           type: string
+          description: get service current status
+      responses:
+        200:
+          description: success
+          
+    post:
+      tags:
+        - POST
+
+      parameters:
+        - name: service
+          in: path
+          type: string
           description: service name
 
-        - name: cmd
-          in: query
-          type: string
-          enum: ['status', 'start', 'stop']
-          description: Activate/deactivate the service or check the service current status
+        - name: command
+          in: body
+          schema:
+            type: object
+            properties:
+              command:
+                type: string
+                enum: ["start", "end"]
+                example: start
+          description: Activate/deactivate the service
 
       responses:
         200:
