@@ -1,4 +1,4 @@
-<form method="post" action="/login">
+<form>
 
     <div class="form-group row">
       <label for="user_id" class="col-2 offset-1 col-form-label">user_id:</label>
@@ -16,7 +16,32 @@
     </div>
     <div class="form-group row">
       <div class="col-2 offset-3">
-        <button type="submit" class="btn btn-dirty-purple">登入</button>
+        <button id="submit-btn">登入</button>
       </div>
     </div>
-  </form>
+</form>
+<script>
+// define the data you want to send
+function get_data(){
+  data = {};
+  data["user_id"] = document.getElementById("user_id").value;
+  data["password"] = document.getElementById("password").value;
+  console.log(data);
+  return data;
+}
+
+// add an event listener to the button
+document.getElementById('submit-btn').addEventListener('click', () => {
+    // make the HTTP POST request with the JSON data
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(get_data())
+    })
+    .then(response => {
+        // handle the server response
+    })
+});
+</script>

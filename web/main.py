@@ -31,9 +31,8 @@ def login():
         parameter = request.get_json()
         userID = parameter.get("user_id")
         passwd = parameter.get("password")
-        print(parameter)
 
-        if (userID in users) and passwd == users[userID]:
+        if passwd and users.get(userID) == passwd:
             user = User(userID)
             login_user(user)
             return jsonify(status=f"Welcome back {user.id}.")
