@@ -9,41 +9,69 @@ schemes:
   - http
 
 paths:      
+  /login:
+    post:
+      tags:
+        - "0. Login"
+
+      parameters:
+        - name: loginfo
+          in: body
+          schema:
+            type: object
+            properties:
+              user_id:
+                type: string
+                example: "user"
+              password:
+                type: string
+                example: "0000"
+          
+      responses:
+        200:
+          description: success
+  
+  /logout:
+    get:
+      tags:
+        - "0. Login"
+
+      responses:
+        200:
+          description: success
+  
   /get_info:
     get:
       summary: Get system information.
       tags:
-        - "GET"
+        - "1. GET"
+
       produces:
         - application/json
+
       responses:
         200:
-          schema:
-              type: object
-              properties:
-                frameWidth:
-                  type: integer
-                  example: 640
-                frameHeight:
-                  type: integer
-                  example: 480
+          description: None
 
   /service/{service}:
     get:
       tags:
-        - GET
+        - "1. GET"
+
       parameters:
         - name: service
           in: path
           type: string
           description: get service current status
+
       responses:
         200:
           description: success
           
     post:
+      summary: Activate/deactivate the service
       tags:
-        - POST
+        - "2. POST"
 
       parameters:
         - name: service
@@ -58,18 +86,28 @@ paths:
             properties:
               command:
                 type: string
-                enum: ["start", "end"]
+                enum: ["start", "stop"]
                 example: start
-          description: Activate/deactivate the service
+          description: "Valid command: ['start', 'stop']"
 
       responses:
         200:
           description: success
 
+  /get_image:
+    get:
+      tags:
+        - "1. GET"
+      
+      responses:
+        200:
+          description: None
+
   /update_box_info:
     post:
       tags:
-      - POST
+        - "3. Person tracking"
+
       parameters:
         - name: box information
           in: body
@@ -93,3 +131,28 @@ paths:
       responses:
         200:
           description: None
+  
+  /get_box_info:
+    get:
+      summary: Get current box infomation
+      tags:
+        - "3. Person tracking"
+      
+      responses:
+        200:
+          schema:
+              type: object
+              properties:
+                boxName:
+                  type: object
+                  properties:
+                    x:
+                      type: integer
+                    y:
+                      type: integer
+                    w:
+                      type: integer
+                    h:
+                      type: integer
+
+        

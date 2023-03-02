@@ -28,8 +28,10 @@ def user_loader(name):
 def login():
 
     if request.method == "POST":
-        userID = request.form["user_id"]
-        passwd = request.form["password"]
+        parameter = request.get_json()
+        userID = parameter.get("user_id")
+        passwd = parameter.get("password")
+        print(parameter)
 
         if (userID in users) and passwd == users[userID]['password']:
             user = User(userID)
@@ -58,8 +60,13 @@ def get_image():
 @APP.route('/get_info', methods=["GET"])
 @login_required
 def get_info():
-
-    return jsonify('{"frameWidth":640, "frameHeight":480}')
+    info = {
+        "camera": {
+            "width": 640,
+            "height": 480
+        }
+    }
+    return jsonify(info)
 
 
 @APP.route('/service/<service>', methods=["GET", "POST"])
@@ -99,7 +106,8 @@ if __name__ == "__main__":
         "description": "My API",
         "version": "1.0.0",
         "termsOfService": "",
-        "hide_top_bar": True
+        "hide_top_bar": True,
+        "ui_params": {"tagsSorter": "alpha"}
     }
 
     Swagger(APP, template_file='swagger.yml')
