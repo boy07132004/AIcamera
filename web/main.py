@@ -33,7 +33,7 @@ def login():
         passwd = parameter.get("password")
         print(parameter)
 
-        if (userID in users) and passwd == users[userID]['password']:
+        if (userID in users) and passwd == users[userID]:
             user = User(userID)
             login_user(user)
             return jsonify(status=f"Welcome back {user.id}.")
@@ -44,7 +44,7 @@ def login():
 @APP.route('/logout')
 def logout():
     logout_user()
-    return jsonify(status="Logout sucess.")
+    return jsonify(status="Logout success.")
 
 
 @APP.route('/get_image')
@@ -116,5 +116,5 @@ if __name__ == "__main__":
 
     LOGIN_MANAGER.login_view = 'login'
     LOGIN_MANAGER.session_protection = 'strong'
-    users = {"user": {'password': '0000'}}
+    users = {"user": '0000'}
     APP.run("0.0.0.0", debug=True)
