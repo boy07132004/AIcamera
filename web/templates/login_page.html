@@ -1,47 +1,32 @@
-<form>
+<input type="text"  id="user_id" name="user_id" placeholder="user_id">
+<input type="password" id="password" name="password" placeholder="password">
+<button id="submit-btn">登入</button>
 
-    <div class="form-group row">
-      <label for="user_id" class="col-2 offset-1 col-form-label">user_id:</label>
-      <div class="col-3">
-        <input type="text" class="form-control" id="user_id" name="user_id" placeholder="user_id">
-        <small class="form-text">提示： Me</small>
-      </div>
-    </div>
-    <div class="form-group row">
-      <label for="password" class="col-2 offset-1 col-form-label">password:</label>
-      <div class="col-3">
-        <input type="password" class="form-control" id="password" name="password" placeholder="password">
-        <small class="form-text">提示： myself</small>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-2 offset-3">
-        <button id="submit-btn">登入</button>
-      </div>
-    </div>
-</form>
 <script>
-// define the data you want to send
-function get_data(){
-  data = {};
-  data["user_id"] = document.getElementById("user_id").value;
-  data["password"] = document.getElementById("password").value;
-  console.log(data);
-  return data;
-}
 
-// add an event listener to the button
-document.getElementById('submit-btn').addEventListener('click', () => {
-    // make the HTTP POST request with the JSON data
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(get_data())
-    })
-    .then(response => {
-        // handle the server response
-    })
-});
+  function get_data(){
+    data = {};
+    data["user_id"] = document.getElementById("user_id").value;
+    data["password"] = document.getElementById("password").value;
+    console.log(data);
+    return data;
+  }
+
+  document.getElementById('submit-btn').addEventListener('click', () => {
+      
+      fetch('/login', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(get_data())
+      })
+      .then(response => {
+          let text = "";
+          if (response.ok) text = "Welcome!";
+          else text = "User or password error";
+
+          alert(text);
+      })
+  });
 </script>

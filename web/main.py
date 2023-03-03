@@ -36,6 +36,8 @@ def login():
             user = User(userID)
             login_user(user)
             return jsonify(status=f"Welcome back {user.id}.")
+        else:
+            return jsonify(errors="user or password error"), 400
 
     return render_template('login_page.html')
 
