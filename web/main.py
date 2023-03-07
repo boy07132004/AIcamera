@@ -1,3 +1,4 @@
+import os
 import cv_part
 from flasgger import Swagger
 from flask import Flask, render_template, Response, request, jsonify
@@ -63,8 +64,8 @@ def get_image():
 def get_info():
     info = {
         "camera": {
-            "width": 640,
-            "height": 480
+            "width": os.environ("CAMERA_WIDTH"),
+            "height": os.environ("CAMERA_HEIGHT")
         }
     }
     return jsonify(info)

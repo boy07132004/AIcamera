@@ -1,7 +1,8 @@
+import os
 import json
 import redis
 import requests
-from flask import render_template, request, make_response, jsonify, Blueprint
+from flask import render_template, request, jsonify, Blueprint
 from flask_login import login_required
 
 
@@ -9,8 +10,6 @@ PERSON = Blueprint('person', __name__)
 POOL = redis.ConnectionPool(host="aicamera_redis_1",
                             port=6379, decode_responses=True)
 REDIS = redis.Redis(connection_pool=POOL)
-WIDTH = 640
-HEIGHT = 480
 
 
 @PERSON.route('/person_box_setting', methods=['GET'])
@@ -22,7 +21,10 @@ def box_setting():
     if rule.rule == "/get_box_info":
         return areaMap
 
-    return render_template("main.html", historyArea=areaMap)
+    imageSize = {"width": os.environ["CAMERA_WIDTH"],
+                 "height": os.environ["CAMERA_HEIGHT"]}
+
+    return render_template("main.html", imageSize=imageSize, historyArea=areaMap)
 
 
 @PERSON.route('/update_box_info', methods=["POST"])

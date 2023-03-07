@@ -1,6 +1,8 @@
 version: "3.4"
 
 x-env-variables: &common-variables
+    CAMERA_WIDTH: 640
+    CAMERA_HEIGHT: 480
     INFLUXDB_DB: auo
     INFLUXDB_ADMIN_USER: root
     INFLUXDB_ADMIN_PASSWORD: ml6a01
