@@ -97,6 +97,12 @@ paths:
     get:
       tags:
         - "1. GET"
+
+      parameters:
+        - name: demo
+          in: query
+          type: string
+          description: type something to get demo image
       
       responses:
         200:

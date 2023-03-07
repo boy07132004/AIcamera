@@ -1,8 +1,11 @@
 import cv2
 
 
-def get_current_image(toJPG=False):
-    cap = cv2.VideoCapture("rtsp://rtsp_server:8554/webcam")
+def get_current_image(toJPG=False, demo=False):
+    src = "rtsp://rtsp_server:8554/"
+    src += "test" if demo else "webcam"
+
+    cap = cv2.VideoCapture(src)
     if not cap.isOpened():
         print("Error opening the camera")
         return None

@@ -49,9 +49,10 @@ def logout():
     return jsonify(status="Logout success.")
 
 
-@APP.route('/get_image')
+@APP.route('/get_image', methods=["GET"])
 def get_image():
-    jpeg = cv_part.get_current_image(True)
+    demo = "demo" in request.args
+    jpeg = cv_part.get_current_image(True, demo)
     if jpeg is not None:
 
         return Response(jpeg.tobytes(), content_type='image/jpeg')
