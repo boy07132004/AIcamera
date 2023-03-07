@@ -65,8 +65,8 @@ def get_image():
 def get_info():
     info = {
         "camera": {
-            "width": os.environ("CAMERA_WIDTH"),
-            "height": os.environ("CAMERA_HEIGHT")
+            "width": os.environ["CAMERA_WIDTH"],
+            "height": os.environ["CAMERA_HEIGHT"]
         }
     }
     return jsonify(info)
