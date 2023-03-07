@@ -135,3 +135,7 @@ paths:
   webcam:
       runOnInit: ffmpeg -f v4l2 -i /dev/video0 -video_size {CAMERA_WIDTH}x{CAMERA_HEIGHT} -pix_fmt yuv420p -preset ultrafast -b:v 600k -f rtsp rtsp://localhost:$RTSP_PORT/$RTSP_PATH
       runOnInitRestart: yes
+  
+  test:
+      runOnInit: ffmpeg -framerate 5 -loop 1 -i /src/test.jpg -vf scale="640:480" -f rtsp rtsp://localhost:$RTSP_PORT/$RTSP_PATH
+      runOnInitRestart: yes

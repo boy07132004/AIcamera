@@ -61,6 +61,7 @@ services:
         build: ./rtsp_server
         volumes: 
             - "$PWD/rtsp_server/rtsp-simple-server.yml:/rtsp-simple-server.yml"
+            - "$PWD/rtsp_server/test.jpg:/src/test.jpg"
         ports:
             - "8554:8554"
         devices:
